@@ -1,18 +1,16 @@
 package main
 
 import (
-	"net/http"
-	"os"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/Save121/simple-go-api/settings"
+	"go.uber.org/fx"
 )
 
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
-	})
-	http.ListenAndServe(os.Getenv("PORT"), r)
+	app := fx.New(
+		fx.Provide(
+			settings.New,
+		),
+		fx.Invoke(),
+	)
+	app.Run()
 }
