@@ -13,8 +13,9 @@ import (
 type Service interface {
 	RegisterUser(ctx context.Context, email, name, password string) error
 	LoginUser(ctx context.Context, email, password string) (*models.User, error)
+	AddUserRole(ctx context.Context, userID, roleID string) error
+	RemoveUserRole(ctx context.Context, userID, roleID string) error
 }
-
 type serv struct {
 	repo repository.Repository
 }

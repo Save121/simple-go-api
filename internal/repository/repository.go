@@ -7,11 +7,15 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-//Repository is the interface that wraps tha basic CRUD operations
+// Repository is the interface that wraps tha basic CRUD operations
+//
 //go:generate mockery --name=Repository  --output=repository --inpackage
 type Repository interface {
 	SaveUser(ctx context.Context, email, name, password string) error
 	GetUserByEmail(ctx context.Context, email string) (*entity.User, error)
+	SaveUserRole(ctx context.Context, userID, roleID string) error
+	RemoveUserRole(ctx context.Context, userID, roleID string) error
+	GetUserRoles(ctx context.Context, userID string) ([]entity.UserRole, error)
 
 }
 
@@ -20,7 +24,7 @@ type repo struct {
 }
 
 func New(db *sqlx.DB) Repository {
-	return &repo {
+	return &repo{
 		db: db,
 	}
 }

@@ -17,12 +17,18 @@ var s Service
 func TestMain(m *testing.M) {
 	validPassword, _ := encryption.Encrypt([]byte("validPassword"))
 	encryptedPassword := encryption.ToBase64(validPassword)
-	u := &entity.User{ Email: "test@exists.com", Password: encryptedPassword }
-
+	u := &entity.User{Email: "test@exists.com", Password: encryptedPassword}
 	repo = &repository.MockRepository{}
 	repo.On("GetUserByEmail", mock.Anything, "test@test.com").Return(nil, nil)
 	repo.On("GetUserByEmail", mock.Anything, "test@exists.com").Return(u, nil)
 	repo.On("SaveUser", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	repo.On("SaveUserRole", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	repo.On("GetUserRoles", mock.Anything, string("user-uuid")).Return([]entity.UserRole{{
+		UserID: "user-uuid",
+		RoleID: "role-uuid",
+	}}, nil)
+	repo.On("GetUserRoles", mock.Anything, mock.Anything).Return(nil, nil)
+	repo.On("RemoveUserRole", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 	s = New(repo)
 	code := m.Run()
 	os.Exit(code)
@@ -95,5 +101,67 @@ func TestLoginUser(t *testing.T) {
 				t.Errorf("Expected error %v, got %v", tc.ExpectedError, err)
 			}
 		})
+	}
+}
+func TestAddUserRole(t *testing.T) {
+	testCases := []struct {
+		Name          string
+		UserID        string
+		RoleID        string
+		ExpectedError error
+	}{{
+		Name:          "AddUserRole_Success",
+		UserID:        "user-uuid2",
+		RoleID:        "role-id2",
+		ExpectedError: nil,
+	}, {
+		Name:          "userAlreadyHasRole",
+		UserID:        "user-uuid",
+		RoleID:        "role-uuid",
+		ExpectedError: ErrUserRoleFound,
+	}}
+
+	ctx := context.Background()
+	for i := range testCases {
+		tc := testCases[i]
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			repo.Mock.Test(t)
+			err := s.AddUserRole(ctx, tc.UserID, tc.RoleID)
+			if err != tc.ExpectedError {
+				t.Errorf("Expected error %v, got %v", tc.ExpectedError, err)
+			}
+		})
+
+	}
+}
+
+func TestRemoveUserRole(t *testing.T) {
+	testCases := []struct {
+		Name          string
+		UserID        string
+		RoleID        string
+		ExpectedError error
+	}{
+		{
+			Name:          "RemoveUserRole_Success",
+			UserID:        "user-uuid",
+			RoleID:        "role-uuid",
+			ExpectedError: nil,
+		},
+	}
+
+	ctx := context.Background()
+	for i := range testCases {
+		tc := testCases[i]
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			repo.Mock.Test(t)
+			err := s.RemoveUserRole(ctx, tc.UserID, tc.RoleID)
+			if err != tc.ExpectedError {
+				t.Errorf("Expected error %v, got %v", tc.ExpectedError, err)
+			}
+		})
+
 	}
 }
