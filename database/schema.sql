@@ -12,7 +12,15 @@ CREATE TABLE ROLES(
      id  uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 )
-
+CREATE TABLE MOVIES (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    description varchar(255) not null,
+    name VARCHAR(255) NOT NULL,
+    price decimal NOT NULL,
+    created_by uuid NOT NULL,
+    creation_date date DEFAULT CURRENT_DATE,
+FOREIGN KEY (created_by) REFERENCES USERS(id)
+)
 CREATE TABLE ROLES_USERS(
      id  uuid DEFAULT gen_random_uuid() PRIMARY KEY,
      user_id uuid NOT NULL,

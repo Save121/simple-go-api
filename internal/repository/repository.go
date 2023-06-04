@@ -16,7 +16,9 @@ type Repository interface {
 	SaveUserRole(ctx context.Context, userID, roleID string) error
 	RemoveUserRole(ctx context.Context, userID, roleID string) error
 	GetUserRoles(ctx context.Context, userID string) ([]entity.UserRole, error)
-
+	SaveMovie(ctx context.Context, price float32, name, description, createdBy string) error
+	GetMovies(ctx context.Context) ([]entity.Movie, error)
+	GetMovieByID(ctx context.Context, id string) (*entity.Movie, error)
 }
 
 type repo struct {

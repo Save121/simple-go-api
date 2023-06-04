@@ -14,6 +14,58 @@ type MockRepository struct {
 	mock.Mock
 }
 
+// GetMovieByID provides a mock function with given fields: ctx, id
+func (_m *MockRepository) GetMovieByID(ctx context.Context, id string) (*entity.Movie, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *entity.Movie
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*entity.Movie, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) *entity.Movie); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entity.Movie)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetMovies provides a mock function with given fields: ctx
+func (_m *MockRepository) GetMovies(ctx context.Context) ([]entity.Movie, error) {
+	ret := _m.Called(ctx)
+
+	var r0 []entity.Movie
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]entity.Movie, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []entity.Movie); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entity.Movie)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetUserByEmail provides a mock function with given fields: ctx, email
 func (_m *MockRepository) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
 	ret := _m.Called(ctx, email)
@@ -73,6 +125,20 @@ func (_m *MockRepository) RemoveUserRole(ctx context.Context, userID string, rol
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, string, string) error); ok {
 		r0 = rf(ctx, userID, roleID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// SaveMovie provides a mock function with given fields: ctx, price, name, description, createdBy
+func (_m *MockRepository) SaveMovie(ctx context.Context, price float32, name string, description string, createdBy string) error {
+	ret := _m.Called(ctx, price, name, description, createdBy)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, float32, string, string, string) error); ok {
+		r0 = rf(ctx, price, name, description, createdBy)
 	} else {
 		r0 = ret.Error(0)
 	}

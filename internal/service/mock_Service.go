@@ -14,6 +14,20 @@ type MockService struct {
 	mock.Mock
 }
 
+// AddMovie provides a mock function with given fields: ctx, movie, email
+func (_m *MockService) AddMovie(ctx context.Context, movie models.Movie, email string) error {
+	ret := _m.Called(ctx, movie, email)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, models.Movie, string) error); ok {
+		r0 = rf(ctx, movie, email)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // AddUserRole provides a mock function with given fields: ctx, userID, roleID
 func (_m *MockService) AddUserRole(ctx context.Context, userID string, roleID string) error {
 	ret := _m.Called(ctx, userID, roleID)
@@ -26,6 +40,58 @@ func (_m *MockService) AddUserRole(ctx context.Context, userID string, roleID st
 	}
 
 	return r0
+}
+
+// GetMovieByID provides a mock function with given fields: ctx, id
+func (_m *MockService) GetMovieByID(ctx context.Context, id string) (*models.Movie, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *models.Movie
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*models.Movie, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) *models.Movie); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*models.Movie)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetMovies provides a mock function with given fields: ctx
+func (_m *MockService) GetMovies(ctx context.Context) ([]models.Movie, error) {
+	ret := _m.Called(ctx)
+
+	var r0 []models.Movie
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]models.Movie, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []models.Movie); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.Movie)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // LoginUser provides a mock function with given fields: ctx, email, password

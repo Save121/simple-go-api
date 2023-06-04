@@ -15,6 +15,9 @@ type Service interface {
 	LoginUser(ctx context.Context, email, password string) (*models.User, error)
 	AddUserRole(ctx context.Context, userID, roleID string) error
 	RemoveUserRole(ctx context.Context, userID, roleID string) error
+	GetMovies(ctx context.Context) ([]models.Movie, error)
+	GetMovieByID(ctx context.Context, id string) (*models.Movie, error)
+	AddMovie(ctx context.Context, movie models.Movie, email string) error
 }
 type serv struct {
 	repo repository.Repository
