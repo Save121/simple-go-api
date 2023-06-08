@@ -33,7 +33,7 @@ func main() {
 func setLifeCycle(lc fx.Lifecycle, api *api.API, s *settings.Settings, e *echo.Echo) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			address := fmt.Sprintf(":%s", s.Port)
+			address := fmt.Sprintf(":%d", s.Port)
 			go api.Start(e, address)
 
 			return nil
